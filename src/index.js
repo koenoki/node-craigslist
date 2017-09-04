@@ -70,12 +70,22 @@ function _getPostingDetails (postingUrl, markup) {
 	details.mapUrl = $('div.mapbox p.mapaddress')
 		.find('a')
 		.attr('href');
+	details.address = _extractAddress(details.mapUrl);
 	details.pid = postingUrl
 		.substring(postingUrl.search(/[0-9]*\.html/))
 		.replace(/\.html/, '');
 	details.replyUrl = ($('#replylink').attr('href') || '').trim();
 	details.title = ($('#titletextonly').text() || '').trim();
+  details.price = ($('.price').text() || '').trim();
 	details.url = postingUrl;
+	let info = $('.attrgroup .shared-line-bubble');
+	if (info.length == 3) {
+    let bdba = $(info[0]).text().trim().split('/');
+    details.bedrooms = parseInt(bdba[0].substring(0, 1));
+    details.bathrooms = parseInt(bdba[1].trim().substring(0, 1));
+    let sqft = $(info[1]).text().trim();
+    details.sqft = parseInt(sqft.substring(0, sqft.length - 'ft2'.length));
+	}
 
 	// populate posting info
 	$('div.postinginfos').find('.postinginfo').each((i, element) => {
@@ -124,6 +134,30 @@ function _getPostingDetails (postingUrl, markup) {
 	}
 
 	return details;
+}
+
+/**
+ * Extracts address from the specified Google Maps URL.
+ *
+ * @param {string} mapUrl - Google Maps URL.
+ * @returns {string} address - extracted physical address, or '' if no address can be parsed.
+ */
+function _extractAddress (mapUrl) {
+	if (mapUrl) {
+    if (mapUrl.startsWith('https://maps.google.com/?q=loc')) {
+      let decodedUrl = urldecode(mapUrl);
+      return decodedUrl.substring('https://maps.google.com/?q=loc: '.length);
+    } else if (mapUrl.startsWith('https://maps.google.com/maps/preview/')) {
+      let components = mapUrl.substring('https://maps.google.com/maps/preview/'.length).split(',');
+      return `${components[0]}:${components[1]}`;
+    }
+	}
+
+	return '';
+}
+
+function urldecode(url) {
+  return decodeURIComponent(url.replace(/\+/g, ' '));
 }
 
 /**
