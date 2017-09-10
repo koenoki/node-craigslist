@@ -79,12 +79,37 @@ function _getPostingDetails (postingUrl, markup) {
   details.price = ($('.price').text() || '').trim();
 	details.url = postingUrl;
 	let info = $('.attrgroup .shared-line-bubble');
-	if (info.length == 3) {
+	if (info.length >= 2) {
     let bdba = $(info[0]).text().trim().split('/');
     details.bedrooms = parseInt(bdba[0].substring(0, 1));
     details.bathrooms = parseInt(bdba[1].trim().substring(0, 1));
+  }
+  if (info.length == 3) {
     let sqft = $(info[1]).text().trim();
     details.sqft = parseInt(sqft.substring(0, sqft.length - 'ft2'.length));
+	}
+	let info2 = $('.mapAndAttrs .attrgroup');
+	if (info2.length > 0) {
+		details.type = 0;
+		let types = {
+			apartment: 1,
+			condo: 2,
+			cottage: 3,
+			duplex: 4,
+			flat: 5,
+			house: 6,
+			loft: 7,
+			townhouse: 8,
+			manufactured: 9,
+			land: 10,
+		};
+		let listingType = $(info2[info2.length - 1]).text();
+		for (let t in types) {
+			if (listingType.indexOf(t) >= 0) {
+				details.type = types[t];
+				break;
+			}
+		}
 	}
 
 	// populate posting info
