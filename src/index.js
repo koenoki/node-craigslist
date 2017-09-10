@@ -78,16 +78,20 @@ function _getPostingDetails (postingUrl, markup) {
 	details.title = ($('#titletextonly').text() || '').trim();
   details.price = ($('.price').text() || '').trim();
 	details.url = postingUrl;
+
 	let info = $('.attrgroup .shared-line-bubble');
-	if (info.length >= 2) {
-    let bdba = $(info[0]).text().trim().split('/');
-    details.bedrooms = parseInt(bdba[0].substring(0, 1));
-    details.bathrooms = parseInt(bdba[1].trim().substring(0, 1));
-  }
-  if (info.length == 3) {
-    let sqft = $(info[1]).text().trim();
+	let infoIndex = 0;
+	let bdba = $(info[infoIndex]).text().trim().split('/');
+	if (bdba.length == 2) {
+		details.bedrooms = parseInt(bdba[0].substring(0, 1));
+		details.bathrooms = parseInt(bdba[1].trim().substring(0, 1));
+		infoIndex++;
+	}
+	let sqft = $(info[infoIndex]).text().trim();
+	if (sqft.indexOf('ft2') > 0) {
     details.sqft = parseInt(sqft.substring(0, sqft.length - 'ft2'.length));
 	}
+
 	let info2 = $('.mapAndAttrs .attrgroup');
 	if (info2.length > 0) {
 		details.type = 0;
