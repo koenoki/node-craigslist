@@ -204,7 +204,7 @@ function _getPostings (options, markup) {
 		postings = [],
 		secure = options.secure;
 
-	$('div.content')
+	$('ul.rows')
 		.find('.result-row')
 		.each((i, element) => {
 			let
