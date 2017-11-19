@@ -24,6 +24,7 @@ const
 	PROTOCOL_INSECURE = 'http',
 	PROTOCOL_SECURE = 'https',
 	QUERY_KEYS = [
+		'area',
 		'bundleDuplicates',
 		'category',
 		'hasImage',
@@ -354,6 +355,12 @@ function _getRequestOptions (options, query) {
 	// setup path
 	if (core.Validation.isEmpty(requestOptions.path)) {
 		requestOptions.path = DEFAULT_PATH;
+	}
+
+	if (!core.Validation.isEmpty(requestOptions.area)) {
+    requestOptions.path = [
+      requestOptions.path,
+			`${requestOptions.area}/`].join('');
 	}
 
 	// setup category
