@@ -501,24 +501,7 @@ export class Client {
 		exec = new Promise((resolve, reject) => {
 			return getDetails
 				.then((details) => {
-					if (!details.replyUrl) {
-						return resolve(details);
-					}
-
-					details.replyUrl = parse(details.replyUrl);
-
-					if (!details.replyUrl.hostname) {
-						details.replyUrl.hostname = requestOptions.hostname;
-					}
-
-					return self.request
-						.get(details.replyUrl)
-						.then((markup) => {
-							self::_getReplyDetails(details, markup);
-
-							return resolve(details);
-						})
-						.catch(reject);
+					return resolve(details);
 				})
 				.catch(reject);
 		});
