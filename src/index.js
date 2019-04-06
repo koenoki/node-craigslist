@@ -174,9 +174,9 @@ function _getPostingDetails (postingUrl, markup) {
  */
 function _extractAddress (mapUrl) {
 	if (mapUrl) {
-    if (mapUrl.startsWith('https://maps.google.com/?q=loc')) {
+    if (mapUrl.startsWith('https://www.google.com/maps?q=')) {
       let decodedUrl = urldecode(mapUrl);
-      return decodedUrl.substring('https://maps.google.com/?q=loc: '.length);
+      return decodedUrl.substring('https://www.google.com/maps?q='.length);
     } else if (mapUrl.startsWith('https://maps.google.com/maps/preview/')) {
       let components = mapUrl.substring('https://maps.google.com/maps/preview/'.length).split(',');
       return `${components[0]}:${components[1]}`;
